@@ -1,0 +1,106 @@
+let test = (res) => {
+            if (Array.length == 0)
+                throw new ValidationError;
+        }
+
+        try(test(res))
+        {
+
+        }
+        var usersRouter = require('./users');
+        app.use('/users', usersRouter);
+
+??? student.js
+        con.query(`select \`roll_no\` =  from \`stu_record\``, (err, res) => {
+        if (err) throw err;
+        console.log(res);
+    })
+
+// student.js
+    con.query(`select * from \`stu_record\` where ${condition}`, (err, res) => {
+        if (err) throw err;
+        if(res.length == 0){
+            res = ["empty"];
+        }
+        else{
+            console.log(res);
+        }   
+
+        resp.send(res)
+    })
+
+//class InvalidParametersProvided extends Error {
+    constructor(message){
+        super();
+        this.message = "Invalid parameters provided";
+        this.name = "InvalidParametersProvided"
+    }
+}
+
+module.exports = InvalidParametersProvided;
+
+
+//
+var express = require('express');
+var router = express.Router();
+var mysql = require('mysql');
+const InvalidParametersProvided = require('./Error')
+/* GET users listing. */
+router.get('/', function (req, resp, next) {
+    var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "",
+        database: "attendance"
+    });
+
+    con.connect(function (err) {
+        if (err) throw err;
+        console.log("Connected!");
+    });
+    let year = req.query.year;
+    let batch = req.query.batch;
+    let condition = '';
+    if (year && batch) {
+        condition = `\`year\`='${year}' AND \`batch\`='${batch}'`
+    } else if (!batch && year) {
+        condition = `\`year\`='${year}'`
+    } else {
+        condition = 1;
+    }
+    con.query(`select * from \`stu_record\` where ${condition}`, (err, res) => {
+        if (err) throw err;
+        console.log(res);
+        let test = (res) => {
+            if (res.length == 0) {
+                throw new InvalidParametersProvided();
+
+            }
+        }
+
+        try {
+            test(res);
+            resp.send(res);
+        } catch (err) {
+            console.log(err.message);
+            resp.send({
+                error: err.message,
+                name: err.name
+            })
+        }
+    })
+});
+
+
+
+module.exports = router;
+
+
+///let b = {
+    funtion = (x) =>{
+        for(i = 0; i < 5; i++){
+            b[i] = a[i];
+        }
+    }
+}
+console.log(b);
